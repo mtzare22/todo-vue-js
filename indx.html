@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    body {
+        background-color: #eee;
+    }
+  </style>
+  <body>
+    <div
+      class="container flex flex-col mx-auto w-1/2 p-2 m-2 rounded-md shadow-md bg-white"
+    >
+      <div id="app" class="flex-col">
+        <h1 class="font-bold text-xl-2 m-1">Todo App</h1>
+        <hr />
+        <div class="flex flex-col gap-1 m-2">
+          <p class="text-sm text-slate-500 italic">Title:</p>
+          <input
+            type="text"
+            v-model="title"
+            class="border-2 p-1 rounded-md outline-none cursor-pointer"
+          />
+          <p class="text-sm text-slate-500 italic">Description:</p>
+          <input
+            type="text"
+            v-model="description"
+            class="border-2 p-1 rounded-md outline-none cursor-pointer"
+          />
+          <button
+            class="rounded-md p-2 bg-green-600 text-green-200 hover:bg-green-500 m-2"
+            v-on:click="add()"
+          >
+            Add
+          </button>
+          <button
+          class="rounded-md p-2 bg-red-600 text-red-200 hover:bg-red-500 m-2"
+          v-on:click="del()"
+        >
+          Remove
+        </button>
+        </div>
+        <hr />
+        <div
+          class="w-full text-center text-slate-400 italic p-4"
+          v-if="isExist == 0"
+        >
+          <p>there is no note here !</p>
+        </div>
+        <div v-else v-for="note in notes">
+          <div v-bind:class="note.id == selected ? 'card p-2 border-2 border-blue-400 rounded-md m-2 hover:cursor-pointer' : 'card p-2 border-2 rounded-md m-2 hover:cursor-pointer hover:bg-slate-50'" @click="cardClick(note)">
+            <p>Title: <small class="font-bold text-slate-400"> {{note.title}} </small></p>
+            <p>Description: <small class="italic text-slate-400"
+              > {{note.description}}</small
+            ></p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <small class="flex italic text-slate-500 w-full text-center mx-auto item-center justify-center">Developed By Mohammad Zare | My First VueJs Project ! &copy; 2022</small>
+    <script src="tailwindcss.js"></script>
+    <script src="vue.global.js"></script>
+    <script>
+      const app = Vue.createApp({
+        data() {
+          return {
+            id: -1,
+            title: "",
+            description: "",
+            message: "Hiiiii !",
+            selected: -1,
+            notes: [{
+                id:1,
+                title:"Note 1",
+                description: "This is note 1 description."
+            },
+            {
+                id:2,
+                title:"Note 2",
+                description: "This is note 2 description."
+            },
+            {
+                id:3,
+                title:"Note 3",
+                description: "This is note 3 description."
+            }],
+          };
+        },
+        methods: {
+          add() {
+            if(this.title != "" || this.description != "") {
+            this.notes.push({
+              id: parseInt(Math.random()*1000000),
+              title: this.title,
+              description: this.description,
+            });
+        }else {
+            alert("Please Fill Blank Items !")
+        }
+          },
+          cardClick(selectedNote) {
+            title = selectedNote.title;
+            description = selectedNote.description;
+            this.selected = selectedNote.id
+          },
+          del() {
+            if(this.notes.length == 0) this.selected = -1;
+            if(this.selected != -1)
+            this.notes = this.notes.filter(x=>x.id != this.selected)
+            else 
+            alert('please select one note to remove!');
+          }
+          
+        },
+        computed: {
+          isExist() {
+            return this.notes.length;
+          },
+        },
+        watch: {
+            select(noteId) {
+            this.selected = noteId;
+          }
+        },
+      });
+      app.mount("#app");
+    </script>
+  </body>
+</html>
